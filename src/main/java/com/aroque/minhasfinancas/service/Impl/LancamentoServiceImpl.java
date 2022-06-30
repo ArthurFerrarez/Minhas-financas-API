@@ -85,7 +85,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 
         // Se o campo de descrição for vazio ou tiver apenas espaços será lançada uma exeção
         if(lancamento.getDescricao() == null || lancamento.getDescricao().trim().equals("")){
-            throw new RegraNegocioExecption("Informe uma Decrição válida.");
+            throw new RegraNegocioExecption("Informe uma Descrição válida.");
         }
 
         // Se o mês de lançamento for vazio ou mês inexistente lança uma exeção
@@ -103,11 +103,11 @@ public class LancamentoServiceImpl implements LancamentoService {
         }
 
         if(lancamento.getValor() == null || lancamento.getValor().compareTo(BigDecimal.ZERO) < 1){
-            throw new RegraNegocioExecption("Informe um valor válido");
+            throw new RegraNegocioExecption("Informe um Valor válido.");
         }
 
         if(lancamento.getTipo() == null){
-            throw new RegraNegocioExecption("Informe um Tipo de lançamento");
+            throw new RegraNegocioExecption("Informe um Tipo de lançamento.");
         }
 
     }

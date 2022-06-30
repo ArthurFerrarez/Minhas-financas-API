@@ -32,7 +32,9 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity salvar( @RequestBody UsuarioDto dto){
         UsuarioModel usuario = UsuarioModel.builder().nome(dto.getNome()).email(dto.getEmail()).senha(dto.getSenha()).build();
-
+        if(usuario.getNome() == null || usuario.getNome().trim().equals("")){
+            return ResponseEntity.badRequest().body("Insira um nome.");
+        }
         try{
             UsuarioModel usuarioSalvo = service.salvarUsuario(usuario);
             return new ResponseEntity(usuarioSalvo, HttpStatus.CREATED);
