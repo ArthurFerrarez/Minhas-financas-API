@@ -112,12 +112,14 @@ public class LancamentoController {
             @RequestParam(value = "descricao", required = false) String descricao,
             @RequestParam(value = "mes", required = false) Integer mes,
             @RequestParam(value = "ano", required = false) Integer ano,
+            @RequestParam(value = "tipo", required = false) TipoLancamentoEnum tipo,
             @RequestParam("usuario") Long idUsuario
         ){
         LancamentoModel lancamentoFiltro = new LancamentoModel();
         lancamentoFiltro.setDescricao(descricao);
         lancamentoFiltro.setMes(mes);
         lancamentoFiltro.setAno(ano);
+        lancamentoFiltro.setTipo(tipo);
 
         Optional<UsuarioModel> usuario = usuarioService.obterPorId(idUsuario);
         if(!usuario.isPresent()) {
