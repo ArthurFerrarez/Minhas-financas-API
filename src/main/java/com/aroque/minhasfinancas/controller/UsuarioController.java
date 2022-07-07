@@ -1,9 +1,11 @@
 package com.aroque.minhasfinancas.controller;
 
+import com.aroque.minhasfinancas.dto.TokenDto;
 import com.aroque.minhasfinancas.dto.UsuarioDto;
 import com.aroque.minhasfinancas.exception.ErroAutentificacao;
 import com.aroque.minhasfinancas.exception.RegraNegocioExecption;
 import com.aroque.minhasfinancas.model.UsuarioModel;
+import com.aroque.minhasfinancas.service.JwtService;
 import com.aroque.minhasfinancas.service.LancamentoService;
 import com.aroque.minhasfinancas.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,13 @@ public class UsuarioController {
     @Autowired
     LancamentoService lancamentoService;
 
-    public UsuarioController(UsuarioService service, LancamentoService lancamentoService){
+    @Autowired
+    JwtService jwtService;
+
+    public UsuarioController(UsuarioService service, LancamentoService lancamentoService, JwtService jwtService) {
         this.service = service;
         this.lancamentoService = lancamentoService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping
@@ -44,10 +50,15 @@ public class UsuarioController {
     }
 
     @PostMapping("/autenticar")
-    public ResponseEntity autenticar(@RequestBody UsuarioDto dto){
+    public ResponseEntity<?> autenticar(@RequestBody UsuarioDto dto){
         try {
             UsuarioModel usuarioAutenticado = service.autenticar(dto.getEmail(), dto.getSenha());
-            return new ResponseEntity(usuarioAutenticado, HttpStatus.OK);
+
+            //Agora irá retornar o token do usuario autenticado e não mais o email e o id
+            String token = jwtService.gerarToken(usuarioAutenticado);
+            TokenDto tokenDto = new TokenDto( usuarioAutenticado.getNome(),token);
+
+            return new ResponseEntity(tokenDto, HttpStatus.OK);
         } catch (ErroAutentificacao e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
